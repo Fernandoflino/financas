@@ -11,6 +11,7 @@ import AdminIndexPage from '@/pages/admin/Index'
 import AdminSettingsPage from '@/pages/admin/Settings'
 import AdminUsersPage from '@/pages/admin/Users'
 import AdminAuditPage from '@/pages/admin/AuditLog'
+import MarketDataTestPage from '@/pages/MarketDataTest'
 
 export default function App() {
   return (
@@ -29,6 +30,16 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Test routes (Phase 3) */}
+          <Route
+            path="/test/market-data"
+            element={
+              <ProtectedRoute>
+                <MarketDataTestPage />
               </ProtectedRoute>
             }
           />
