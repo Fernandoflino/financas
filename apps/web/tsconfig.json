@@ -18,8 +18,11 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": ["src/*"],
+      "shared-types": ["../../packages/shared-types/src"],
+      "shared-types/*": ["../../packages/shared-types/src/*"]
+    },
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

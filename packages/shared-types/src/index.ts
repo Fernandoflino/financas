@@ -52,7 +52,7 @@ export interface AuditLog {
   created_at: string
 }
 
-// User Profile Type (será criado na Fase 1)
+// User Profile Type
 export interface UserProfile {
   id: string
   email: string
@@ -61,3 +61,6 @@ export interface UserProfile {
   created_at: string
   updated_at: string
 }
+
+// Export database types from generated types
+export type { Database } from './database.types'
