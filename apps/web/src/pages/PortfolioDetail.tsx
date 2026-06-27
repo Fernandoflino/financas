@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { PortfolioService } from '@/lib/services/PortfolioService'
 import { PortfolioImportModal } from '@/components/PortfolioImportModal'
+import { AIAnalysisModal } from '@/components/AIAnalysisModal'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -23,6 +24,7 @@ export default function PortfolioDetailPage() {
   const [error, setError] = useState<string>('')
   const [showForm, setShowForm] = useState(false)
   const [showImportModal, setShowImportModal] = useState(false)
+  const [showAIModal, setShowAIModal] = useState(false)
   const [dataSourceId, setDataSourceId] = useState<string>('')
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<AssetFormData>({
@@ -247,7 +249,7 @@ export default function PortfolioDetailPage() {
         )}
 
         {!showForm && (
-          <div className="mb-8 flex gap-3">
+          <div className="mb-8 flex gap-3 flex-wrap">
             <button
               onClick={() => setShowForm(true)}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
@@ -259,6 +261,12 @@ export default function PortfolioDetailPage() {
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
             >
               🔄 Sincronizar Investidor10
+            </button>
+            <button
+              onClick={() => setShowAIModal(true)}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium"
+            >
+              🤖 Análise com IA
             </button>
           </div>
         )}
@@ -327,6 +335,17 @@ export default function PortfolioDetailPage() {
             dataSourceId={dataSourceId}
             onImportComplete={handleImportComplete}
             onClose={() => setShowImportModal(false)}
+          />
+        )}
+
+        {/* AI Analysis Modal */}
+        {showAIModal && portfolioId && (
+          <AIAnalysisModal
+            portfolioId={portfolioId}
+            onAnalysisComplete={() => {
+              // Optionally reload portfolio
+            }}
+            onClose={() => setShowAIModal(false)}
           />
         )}
       </div>
