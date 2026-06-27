@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { PortfolioService } from '@/lib/services/PortfolioService'
+import { PortfolioImportModal } from '@/components/PortfolioImportModal'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,6 +22,8 @@ export default function PortfolioDetailPage() {
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string>('')
   const [showForm, setShowForm] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
+  const [dataSourceId, setDataSourceId] = useState<string>('')
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<AssetFormData>({
     resolver: zodResolver(assetSchema),
@@ -71,6 +74,22 @@ export default function PortfolioDetailPage() {
       setError(err instanceof Error ? err.message : 'Erro ao adicionar ativo')
     } finally {
       setAdding(false)
+    }
+  }
+
+  const handleImportComplete = async () => {
+    setShowImportModal(false)
+    // Reload portfolio
+    const updated = await PortfolioService.getPortfolioWithDetails(portfolioId!)
+    if (updated) setPortfolio(updated)
+  }
+
+  const openImportModal = () => {
+    if (!portfolio || !portfolio.dataSources || portfolio.dataSources.length === 0) return
+    const manualSource = portfolio.dataSources.find((ds: any) => ds.provider === 'manual')
+    if (manualSource) {
+      setDataSourceId(manualSource.id)
+      setShowImportModal(true)
     }
   }
 
@@ -228,12 +247,20 @@ export default function PortfolioDetailPage() {
         )}
 
         {!showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="mb-8 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-          >
-            + Adicionar Ativo
-          </button>
+          <div className="mb-8 flex gap-3">
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+            >
+              + Adicionar Ativo
+            </button>
+            <button
+              onClick={openImportModal}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            >
+              🔄 Sincronizar Investidor10
+            </button>
+          </div>
         )}
 
         {/* Assets Table */}
@@ -291,6 +318,16 @@ export default function PortfolioDetailPage() {
               </tbody>
             </table>
           </div>
+        )}
+
+        {/* Import Modal */}
+        {showImportModal && portfolioId && (
+          <PortfolioImportModal
+            portfolioId={portfolioId}
+            dataSourceId={dataSourceId}
+            onImportComplete={handleImportComplete}
+            onClose={() => setShowImportModal(false)}
+          />
         )}
       </div>
     </div>
