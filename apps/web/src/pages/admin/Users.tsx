@@ -36,37 +36,13 @@ export default function UsersPage() {
           return
         }
 
-        // Get users and their profiles
-        const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers()
-        if (usersError) throw usersError
+        // Call Edge Function to get all users (with permission check)
+        const { data, error: funcError } = await supabase.functions.invoke('admin-list-users')
 
-        // Get profiles for additional info
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, full_name')
+        if (funcError) throw funcError
+        if (!data?.users) throw new Error('No users returned')
 
-        if (profilesError) throw profilesError
-
-        // Get user roles
-        const { data: rolesData, error: rolesError } = (await supabase
-          .from('user_roles' as any)
-          .select('user_id, roles(name)')) as any
-
-        if (rolesError) throw rolesError
-
-        const profileMap = Object.fromEntries(profilesData?.map((p: any) => [p.id, p.full_name]) || [])
-        const roleMap = Object.fromEntries(rolesData?.map((r: any) => [r.user_id, r.roles?.name]) || [])
-
-        const enrichedUsers = usersData.users.map((u: any) => ({
-          ...u,
-          full_name: profileMap[u.id],
-          role: roleMap[u.id],
-          created_at: u.created_at,
-          last_sign_in_at: u.last_sign_in_at,
-          ban_reason: u.banned_until && u.ban_reason ? u.ban_reason : null,
-        }))
-
-        setUsers(enrichedUsers)
+        setUsers(data.users)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao carregar usuários')
       } finally {

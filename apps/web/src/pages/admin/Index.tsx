@@ -15,16 +15,20 @@ export default function AdminDashboard() {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const { data: usersData } = await supabase.auth.admin.listUsers()
-        const { data: logsData } = (await supabase
-          .from('audit_log' as any)
+        // Get users via Edge Function
+        const { data: usersRes } = await supabase.functions.invoke('admin-list-users')
+        const usersData = usersRes?.users || []
+
+        // Get recent audit logs
+        const { data: logsData } = (await (supabase as any)
+          .from('audit_log')
           .select('id')
           .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())) as any
 
-        const activeCount = usersData?.users?.filter((u: any) => !u.ban_reason).length || 0
+        const activeCount = usersData.filter((u: any) => !u.ban_reason).length
 
         setStats({
-          totalUsers: usersData?.users?.length || 0,
+          totalUsers: usersData.length,
           activeUsers: activeCount,
           recentActions: logsData?.length || 0,
         })

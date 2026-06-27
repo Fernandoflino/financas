@@ -33,8 +33,8 @@ export default function AuditLogPage() {
           return
         }
 
-        const { data, error: fetchError } = (await supabase
-          .from('audit_log' as any)
+        const { data, error: fetchError } = (await (supabase as any)
+          .from('audit_log')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(100)) as any

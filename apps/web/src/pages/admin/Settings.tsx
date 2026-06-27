@@ -42,10 +42,10 @@ export default function SettingsPage() {
           return
         }
 
-        const { data, error: fetchError } = (await supabase
-          .from('app_settings' as any)
+        const { data, error: fetchError } = (await (supabase as any)
+          .from('app_settings')
           .select('*')
-          .eq('id', '1')
+          .eq('id', 1)
           .single()) as any
 
         if (fetchError) throw fetchError
