@@ -12,6 +12,8 @@ import AdminSettingsPage from '@/pages/admin/Settings'
 import AdminUsersPage from '@/pages/admin/Users'
 import AdminAuditPage from '@/pages/admin/AuditLog'
 import MarketDataTestPage from '@/pages/MarketDataTest'
+import PortfoliosPage from '@/pages/PortfoliosIndex'
+import PortfolioDetailPage from '@/pages/PortfolioDetail'
 
 export default function App() {
   return (
@@ -30,6 +32,24 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Portfolio routes (Phase 4) */}
+          <Route
+            path="/portfolios"
+            element={
+              <ProtectedRoute>
+                <PortfoliosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/portfolios/:portfolioId"
+            element={
+              <ProtectedRoute>
+                <PortfolioDetailPage />
               </ProtectedRoute>
             }
           />
