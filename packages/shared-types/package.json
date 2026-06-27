@@ -1,0 +1,14 @@
+{
+  "name": "shared-types",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

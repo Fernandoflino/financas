@@ -1,0 +1,42 @@
+# Supabase Configuration
+
+[project]
+project_id = "vfglcvmcsiwvqtkpjchl"
+account_id = "e8c9a2f8-7f8e-4c9e-9f8e-4c9e9f8e4c9e"  # Será preenchido na primeira execução
+db_url = "postgresql://postgres:WnAi3z1zNbYp81Ef@127.0.0.1:5432/postgres"
+external_id = ""
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 5432
+major_version = 15
+
+[realtime]
+enabled = true
+max_bytes_per_second = 1048576
+
+[auth]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["https://localhost:3000", "https://financeiro.vercel.app"]
+jwt_secret = "your-super-secret-jwt-token-change-me-in-production"
+jwt_expiry = 3600
+refresh_token_rotation_enabled = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_signups = false
+
+[storage]
+file_size_limit = 52428800
+s3_protocol = "http"
+s3_host = "storage.supabase.local"
+s3_port = 5000
+s3_region = "local"
+s3_access_key = "625729a08b95740f4e8c5bac6f2a3ecb"
+s3_secret_key = "850181e4652dd023e7d119716a03b1ac"
+s3_force_path_style = true
